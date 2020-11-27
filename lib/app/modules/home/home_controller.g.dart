@@ -22,13 +22,13 @@ mixin _$HomeController on _HomeControllerBase, Store {
   final _$podcastsAtom = Atom(name: '_HomeControllerBase.podcasts');
 
   @override
-  ObservableFuture<dynamic> get podcasts {
+  ObservableList<Podcast> get podcasts {
     _$podcastsAtom.reportRead();
     return super.podcasts;
   }
 
   @override
-  set podcasts(ObservableFuture<dynamic> value) {
+  set podcasts(ObservableList<Podcast> value) {
     _$podcastsAtom.reportWrite(value, super.podcasts, () {
       super.podcasts = value;
     });
@@ -38,16 +38,54 @@ mixin _$HomeController on _HomeControllerBase, Store {
       Atom(name: '_HomeControllerBase.podcastSelected');
 
   @override
-  ObservableFuture<dynamic> get podcastSelected {
+  Podcast get podcastSelected {
     _$podcastSelectedAtom.reportRead();
     return super.podcastSelected;
   }
 
   @override
-  set podcastSelected(ObservableFuture<dynamic> value) {
+  set podcastSelected(Podcast value) {
     _$podcastSelectedAtom.reportWrite(value, super.podcastSelected, () {
       super.podcastSelected = value;
     });
+  }
+
+  final _$statusPodcastAtom = Atom(name: '_HomeControllerBase.statusPodcast');
+
+  @override
+  StatusPodcast get statusPodcast {
+    _$statusPodcastAtom.reportRead();
+    return super.statusPodcast;
+  }
+
+  @override
+  set statusPodcast(StatusPodcast value) {
+    _$statusPodcastAtom.reportWrite(value, super.statusPodcast, () {
+      super.statusPodcast = value;
+    });
+  }
+
+  final _$statusPodcastsAtom = Atom(name: '_HomeControllerBase.statusPodcasts');
+
+  @override
+  StatusPodcast get statusPodcasts {
+    _$statusPodcastsAtom.reportRead();
+    return super.statusPodcasts;
+  }
+
+  @override
+  set statusPodcasts(StatusPodcast value) {
+    _$statusPodcastsAtom.reportWrite(value, super.statusPodcasts, () {
+      super.statusPodcasts = value;
+    });
+  }
+
+  final _$fetchPodcastsAsyncAction =
+      AsyncAction('_HomeControllerBase.fetchPodcasts');
+
+  @override
+  Future fetchPodcasts() {
+    return _$fetchPodcastsAsyncAction.run(() => super.fetchPodcasts());
   }
 
   final _$fetchPodcastAsyncAction =
@@ -62,11 +100,11 @@ mixin _$HomeController on _HomeControllerBase, Store {
       ActionController(name: '_HomeControllerBase');
 
   @override
-  dynamic fetchPodcasts() {
+  dynamic selectPodcast(Podcast podcast) {
     final _$actionInfo = _$_HomeControllerBaseActionController.startAction(
-        name: '_HomeControllerBase.fetchPodcasts');
+        name: '_HomeControllerBase.selectPodcast');
     try {
-      return super.fetchPodcasts();
+      return super.selectPodcast(podcast);
     } finally {
       _$_HomeControllerBaseActionController.endAction(_$actionInfo);
     }
@@ -76,7 +114,9 @@ mixin _$HomeController on _HomeControllerBase, Store {
   String toString() {
     return '''
 podcasts: ${podcasts},
-podcastSelected: ${podcastSelected}
+podcastSelected: ${podcastSelected},
+statusPodcast: ${statusPodcast},
+statusPodcasts: ${statusPodcasts}
     ''';
   }
 }

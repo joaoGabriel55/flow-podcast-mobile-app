@@ -34,35 +34,37 @@ class _PodcastCard extends State<PodcastCard> {
               width: 80,
               fit: BoxFit.fill,
             ),
-            Container(
-              margin: EdgeInsets.only(left: 18),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: EdgeInsets.only(top: 8),
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    child: Text(
-                      widget.title,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 8),
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    child: Text(
-                      widget.description,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.only(left: 18),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.only(top: 8),
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      child: Text(
+                        widget.title,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700),
                       ),
                     ),
-                  )
-                ],
+                    Container(
+                      padding: EdgeInsets.only(top: 8),
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      child: Text(
+                        widget.description,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
             Container(

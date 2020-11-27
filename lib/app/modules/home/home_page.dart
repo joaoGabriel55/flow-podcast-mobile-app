@@ -1,4 +1,5 @@
 import 'package:flowpdc_app/app/shared/models/podcast.dart';
+import 'package:flowpdc_app/app/status/status_podcast.dart';
 import 'package:flowpdc_app/app/widgets/player/player_controller.dart';
 import 'package:flowpdc_app/app/widgets/player/player_widget.dart';
 import 'package:flowpdc_app/app/widgets/podcast_card/podcast_card_widget.dart';
@@ -59,47 +60,59 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
           ),
           child: Observer(
             builder: (_) {
-              if (controller.podcasts.error != null) {
-                return Center(
-                  child: RaisedButton(
-                    onPressed: () {
-                      controller.fetchPodcasts();
-                    },
-                  ),
-                );
+              switch (controller.statusPodcasts) {
+                case StatusPodcast.ERROR:
+                  return Center(
+                    child: RaisedButton(
+                      onPressed: () {
+                        controller.fetchPodcasts();
+                      },
+                    ),
+                  );
+                  break;
+                case StatusPodcast.LOADING:
+                  return Center(
+                    child: CircularProgressIndicator(
+                      backgroundColor: Colors.amber,
+                    ),
+                  );
+                  break;
+                case StatusPodcast.SUCCESS:
+                  List<Podcast> _podcasts = controller.podcasts;
+                  return Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      ListView.builder(
+                          itemCount: _podcasts.length,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              child: PodcastCard(
+                                thumbnail: _podcasts[index].thumbnailUrl,
+                                title: _podcasts[index].title,
+                                description: _podcasts[index].description,
+                              ),
+                              onTap: () {
+                                controller.selectPodcast(_podcasts[index]);
+                              },
+                            );
+                          }),
+                      Observer(
+                        builder: (_) {
+                          if (controller.podcastSelected != null) {
+                            return PlayerWidget(
+                                podcast: controller.podcastSelected);
+                          } else {
+                            return Divider();
+                          }
+                        },
+                      ),
+                    ],
+                  );
+                  break;
+                default:
+                  return Container();
+                  break;
               }
-              if (controller.podcasts.value == null) {
-                return Center(
-                  child: CircularProgressIndicator(
-                    backgroundColor: Colors.amber,
-                  ),
-                );
-              }
-
-              List<Podcast> _podcasts = controller.podcasts.value;
-              return Stack(
-                alignment: Alignment.center,
-                children: [
-                  ListView.builder(
-                      itemCount: _podcasts.length,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          child: PodcastCard(
-                            thumbnail: _podcasts[index].thumbnailUrl,
-                            title: _podcasts[index].title,
-                            description: _podcasts[index].description,
-                          ),
-                          onTap: () {
-                            controller.podcastSelected =
-                                ObservableFuture.value(_podcasts[index]);
-                          },
-                        );
-                      }),
-                  controller.podcastSelected != null
-                      ? PlayerWidget(podcast: controller.podcastSelected.value)
-                      : Divider()
-                ],
-              );
             },
           ),
         ),

@@ -1,4 +1,6 @@
+import 'package:flowpdc_app/app/shared/models/podcast.dart';
 import 'package:flowpdc_app/app/shared/repositories/podcast_repository.dart';
+import 'package:flowpdc_app/app/status/status_podcast.dart';
 import 'package:mobx/mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -11,23 +13,46 @@ abstract class _HomeControllerBase with Store {
   final PodcastRepository repository;
 
   @observable
-  ObservableFuture podcasts;
+  ObservableList<Podcast> podcasts;
 
   @observable
-  ObservableFuture podcastSelected;
+  Podcast podcastSelected;
+
+  @observable
+  StatusPodcast statusPodcast = StatusPodcast.INITIAL;
+
+  @observable
+  StatusPodcast statusPodcasts = StatusPodcast.INITIAL;
 
   _HomeControllerBase(this.repository) {
     fetchPodcasts();
   }
 
   @action
-  fetchPodcasts() {
-    podcasts = repository.getAllPodcasts().asObservable();
+  selectPodcast(Podcast podcast) => podcastSelected = podcast;
+
+  @action
+  fetchPodcasts() async {
+    try {
+      statusPodcasts = StatusPodcast.LOADING;
+      podcasts = await repository.getAllPodcasts();
+      statusPodcasts = StatusPodcast.SUCCESS;
+    } catch (e) {
+      statusPodcasts = StatusPodcast.ERROR;
+      //statusPodcasts.setMensagem = "Ex mensagem de erro";
+    }
   }
 
   @action
   fetchPodcast(String id) async {
-    podcastSelected = repository.getPodcast(id).asObservable();
+    try {
+      statusPodcast = StatusPodcast.LOADING;
+      podcastSelected = await repository.getPodcast(id).asObservable();
+      statusPodcast = StatusPodcast.SUCCESS;
+    } catch (e) {
+      statusPodcast = StatusPodcast.ERROR;
+      //statusPodcastSelected.setMensagem = "Ex mensagem de erro";
+    }
   }
 
   // TODO: Favorite

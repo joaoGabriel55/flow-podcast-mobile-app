@@ -16,17 +16,18 @@ abstract class _PlayerControllerBase with Store {
   @observable
   ObservableFuture assetsAudioPlayer;
 
-  _PlayerControllerBase(this.audioUrl) {
-    this.audioPlayer = AssetsAudioPlayer();
-    openAudio(this.audioUrl.value);
+  // TODO: Problema no this.audioUrl
+  _PlayerControllerBase() {
+    //this.audioPlayer = AssetsAudioPlayer();
+    //openAudio(this.audioUrl.value);
   }
 
   @action
   void openAudio(String audioUrl) {
     this.audioPlayer = AssetsAudioPlayer();
     this.audioPlayer.open(
-      Audio.network(audioUrl),
-    );
+          Audio.network(audioUrl),
+        );
     assetsAudioPlayer = ObservableFuture.value(this.audioPlayer);
   }
 }
