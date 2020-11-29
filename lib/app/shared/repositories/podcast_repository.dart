@@ -1,11 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:flowpdc_app/app/shared/models/podcast.dart';
+import 'package:mobx/mobx.dart';
 
 class PodcastRepository {
   final Dio dio;
 
   PodcastRepository(this.dio);
-  Future<List<Podcast>> getAllPodcasts() async {
+  Future<ObservableList<Podcast>> getAllPodcasts() async {
     var payload = {
       "params": {"filter": "episodes"}
     };
@@ -20,7 +21,7 @@ class PodcastRepository {
           .build();
       list.add(podcast);
     }
-    return list;
+    return list.asObservable();
   }
 
   Future<Podcast> getPodcast(String id) async {

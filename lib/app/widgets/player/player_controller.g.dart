@@ -7,7 +7,7 @@ part of 'player_controller.dart';
 // **************************************************************************
 
 final $PlayerController = BindInject(
-  (i) => PlayerController(i<ObservableFuture>()),
+  (i) => PlayerController(),
   singleton: true,
   lazy: true,
 );

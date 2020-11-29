@@ -36,8 +36,9 @@ class _PlayerWidget extends ModularState<PlayerWidget, PlayerController> {
           child: Observer(
             builder: (_) {
               // controller.audioUrl = ObservableFuture.value(widget.podcast.audioUrl);
-              AssetsAudioPlayer audioPlayer =
+              /*AssetsAudioPlayer audioPlayer =
                   controller.assetsAudioPlayer.value;
+                  */
               return Container(
                 margin: EdgeInsets.only(left: 18, right: 18, bottom: 8),
                 child: Row(
@@ -84,6 +85,7 @@ class _PlayerWidget extends ModularState<PlayerWidget, PlayerController> {
                                 ],
                               ),
                             ),
+                            /*
                             Container(
                               margin: EdgeInsets.all(8),
                               child: IconButton(
@@ -101,6 +103,7 @@ class _PlayerWidget extends ModularState<PlayerWidget, PlayerController> {
                                 },
                               ),
                             ),
+                            */
                             Container(
                                 margin: EdgeInsets.all(8),
                                 child: IconButton(
