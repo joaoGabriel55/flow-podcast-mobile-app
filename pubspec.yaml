@@ -26,6 +26,8 @@ scripts:
     mobx_build: $runner build
     mobx_watch: $clean & $get & $runner watch
     mobx_build_clean: $clean & $get & $runner build --delete-conflicting-outputs
+    android-build: flutter build apk --split-per-abi
+    android-install: flutter install
 
 
 
