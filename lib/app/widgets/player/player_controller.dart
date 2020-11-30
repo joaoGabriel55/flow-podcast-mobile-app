@@ -8,26 +8,17 @@ part 'player_controller.g.dart';
 class PlayerController = _PlayerControllerBase with _$PlayerController;
 
 abstract class _PlayerControllerBase with Store {
-  AssetsAudioPlayer audioPlayer;
+  @observable
+  ObservableFuture isPlaying;
 
   @observable
-  ObservableFuture audioUrl;
+  ObservableFuture audioDuration;
 
   @observable
-  ObservableFuture assetsAudioPlayer;
+  ObservableFuture audioCurrentTime;
 
-  // TODO: Problema no this.audioUrl
   _PlayerControllerBase() {
-    //this.audioPlayer = AssetsAudioPlayer();
-    //openAudio(this.audioUrl.value);
-  }
-
-  @action
-  void openAudio(String audioUrl) {
-    this.audioPlayer = AssetsAudioPlayer();
-    this.audioPlayer.open(
-          Audio.network(audioUrl),
-        );
-    assetsAudioPlayer = ObservableFuture.value(this.audioPlayer);
+    this.isPlaying = ObservableFuture.value(true);
+    this.audioCurrentTime = ObservableFuture.value(null);
   }
 }

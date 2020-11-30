@@ -46,10 +46,12 @@ class _PodcastCard extends State<PodcastCard> {
                       width: MediaQuery.of(context).size.width * 0.5,
                       child: Text(
                         widget.title,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700),
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                     Container(
@@ -57,6 +59,7 @@ class _PodcastCard extends State<PodcastCard> {
                       width: MediaQuery.of(context).size.width * 0.5,
                       child: Text(
                         widget.description,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 14,
@@ -70,8 +73,11 @@ class _PodcastCard extends State<PodcastCard> {
             Container(
               margin: EdgeInsets.all(8),
               child: IconButton(
-                icon: Icon(Icons.favorite,
-                    color: Theme.of(context).accentColor, size: 28),
+                icon: Icon(
+                  Icons.favorite,
+                  color: Theme.of(context).accentColor,
+                  size: 28,
+                ),
                 onPressed: () {},
               ),
             )

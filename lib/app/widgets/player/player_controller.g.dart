@@ -19,56 +19,58 @@ final $PlayerController = BindInject(
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$PlayerController on _PlayerControllerBase, Store {
-  final _$audioUrlAtom = Atom(name: '_PlayerControllerBase.audioUrl');
+  final _$isPlayingAtom = Atom(name: '_PlayerControllerBase.isPlaying');
 
   @override
-  ObservableFuture<dynamic> get audioUrl {
-    _$audioUrlAtom.reportRead();
-    return super.audioUrl;
+  ObservableFuture<dynamic> get isPlaying {
+    _$isPlayingAtom.reportRead();
+    return super.isPlaying;
   }
 
   @override
-  set audioUrl(ObservableFuture<dynamic> value) {
-    _$audioUrlAtom.reportWrite(value, super.audioUrl, () {
-      super.audioUrl = value;
+  set isPlaying(ObservableFuture<dynamic> value) {
+    _$isPlayingAtom.reportWrite(value, super.isPlaying, () {
+      super.isPlaying = value;
     });
   }
 
-  final _$assetsAudioPlayerAtom =
-      Atom(name: '_PlayerControllerBase.assetsAudioPlayer');
+  final _$audioDurationAtom = Atom(name: '_PlayerControllerBase.audioDuration');
 
   @override
-  ObservableFuture<dynamic> get assetsAudioPlayer {
-    _$assetsAudioPlayerAtom.reportRead();
-    return super.assetsAudioPlayer;
+  ObservableFuture<dynamic> get audioDuration {
+    _$audioDurationAtom.reportRead();
+    return super.audioDuration;
   }
 
   @override
-  set assetsAudioPlayer(ObservableFuture<dynamic> value) {
-    _$assetsAudioPlayerAtom.reportWrite(value, super.assetsAudioPlayer, () {
-      super.assetsAudioPlayer = value;
+  set audioDuration(ObservableFuture<dynamic> value) {
+    _$audioDurationAtom.reportWrite(value, super.audioDuration, () {
+      super.audioDuration = value;
     });
   }
 
-  final _$_PlayerControllerBaseActionController =
-      ActionController(name: '_PlayerControllerBase');
+  final _$audioCurrentTimeAtom =
+      Atom(name: '_PlayerControllerBase.audioCurrentTime');
 
   @override
-  void openAudio(String audioUrl) {
-    final _$actionInfo = _$_PlayerControllerBaseActionController.startAction(
-        name: '_PlayerControllerBase.openAudio');
-    try {
-      return super.openAudio(audioUrl);
-    } finally {
-      _$_PlayerControllerBaseActionController.endAction(_$actionInfo);
-    }
+  ObservableFuture<dynamic> get audioCurrentTime {
+    _$audioCurrentTimeAtom.reportRead();
+    return super.audioCurrentTime;
+  }
+
+  @override
+  set audioCurrentTime(ObservableFuture<dynamic> value) {
+    _$audioCurrentTimeAtom.reportWrite(value, super.audioCurrentTime, () {
+      super.audioCurrentTime = value;
+    });
   }
 
   @override
   String toString() {
     return '''
-audioUrl: ${audioUrl},
-assetsAudioPlayer: ${assetsAudioPlayer}
+isPlaying: ${isPlaying},
+audioDuration: ${audioDuration},
+audioCurrentTime: ${audioCurrentTime}
     ''';
   }
 }
