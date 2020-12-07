@@ -17,7 +17,7 @@ class PlayerWidget extends StatefulWidget {
 
 class _PlayerWidget extends ModularState<PlayerWidget, PlayerController> {
   final _assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
-  String _currentAudio = null;
+  String _currentAudio;
   @override
   Widget build(BuildContext context) {
     return Column(

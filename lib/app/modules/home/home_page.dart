@@ -83,19 +83,21 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
                     alignment: Alignment.center,
                     children: [
                       ListView.builder(
-                          itemCount: _podcasts.length,
-                          itemBuilder: (context, index) {
-                            return GestureDetector(
-                              child: PodcastCard(
-                                thumbnail: _podcasts[index].thumbnailUrl,
-                                title: _podcasts[index].title,
-                                description: _podcasts[index].description,
-                              ),
-                              onTap: () {
-                                controller.selectPodcast(_podcasts[index]);
-                              },
-                            );
-                          }),
+                        itemCount: _podcasts.length,
+                        padding: EdgeInsets.only(bottom: controller.podcastSelected != null ? 108 : 8),
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            child: PodcastCard(
+                              thumbnail: _podcasts[index].thumbnailUrl,
+                              title: _podcasts[index].title,
+                              description: _podcasts[index].description,
+                            ),
+                            onTap: () {
+                              controller.selectPodcast(_podcasts[index]);
+                            },
+                          );
+                        },
+                      ),
                       Observer(
                         builder: (_) {
                           if (controller.podcastSelected != null) {
