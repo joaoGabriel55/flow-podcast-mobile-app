@@ -1,6 +1,5 @@
-import 'package:assets_audio_player/assets_audio_player.dart';
-import 'package:mobx/mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:mobx/mobx.dart';
 
 part 'player_controller.g.dart';
 
@@ -18,7 +17,7 @@ abstract class _PlayerControllerBase with Store {
   ObservableFuture audioCurrentTime;
 
   _PlayerControllerBase() {
-    this.isPlaying = ObservableFuture.value(true);
+    this.isPlaying = ObservableFuture.value(null);
     this.audioCurrentTime = ObservableFuture.value(null);
   }
 }

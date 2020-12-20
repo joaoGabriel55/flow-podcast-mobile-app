@@ -1,8 +1,8 @@
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flowpdc_app/app/shared/models/podcast.dart';
 import 'package:flowpdc_app/app/widgets/player/player_controller.dart';
 import 'package:flowpdc_app/app/widgets/player/position_seek_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
@@ -11,6 +11,7 @@ class PlayerWidget extends StatefulWidget {
   final Podcast podcast;
 
   const PlayerWidget({Key key, this.podcast}) : super(key: key);
+
   @override
   _PlayerWidget createState() => new _PlayerWidget();
 }
@@ -18,8 +19,44 @@ class PlayerWidget extends StatefulWidget {
 class _PlayerWidget extends ModularState<PlayerWidget, PlayerController> {
   final _assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
   String _currentAudio;
+
+  void _loadAudio(String url) {
+    _assetsAudioPlayer.stop();
+    _assetsAudioPlayer.open(
+      Audio.network(
+        url,
+        metas: Metas(
+          title: widget.podcast.title,
+          image: MetasImage.network(widget.podcast.thumbnailUrl),
+        ),
+      ),
+      autoStart: true,
+      showNotification: true,
+      notificationSettings: NotificationSettings(
+        nextEnabled: false,
+        prevEnabled: false,
+      ),
+    );
+  }
+
+  IconData getStatusAudio(bool value, dynamic playing) {
+    if (!value && !playing) {
+      return Icons.pause_circle_filled;
+    }
+    return Icons.play_circle_fill;
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (_currentAudio == null) {
+      _currentAudio = widget.podcast.audioUrl;
+      _loadAudio(_currentAudio);
+    } else if (_currentAudio != widget.podcast.audioUrl) {
+      _currentAudio = widget.podcast.audioUrl;
+      _loadAudio(_currentAudio);
+    }
+    controller.isPlaying =
+        ObservableFuture.value(_assetsAudioPlayer.isPlaying.value);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.max,
@@ -33,32 +70,11 @@ class _PlayerWidget extends ModularState<PlayerWidget, PlayerController> {
             ),
           ),
           margin: EdgeInsets.all(0),
-          child: Observer(
-            builder: (_) {
-              if (_currentAudio == null)
-                _currentAudio = widget.podcast.audioUrl;
-              else if (_currentAudio != widget.podcast.audioUrl) {
-                _currentAudio = widget.podcast.audioUrl;
-                _assetsAudioPlayer.stop();
-                _assetsAudioPlayer.open(
-                  Audio.network(
-                    widget.podcast.audioUrl,
-                    metas: Metas(
-                      title: widget.podcast.title,
-                      image: MetasImage.network(widget.podcast.thumbnailUrl),
-                    ),
-                  ),
-                  autoStart: true,
-                  showNotification: true,
-                  notificationSettings: NotificationSettings(
-                    nextEnabled: false,
-                    prevEnabled: false
-                  )
-                );
-              }
-              return Container(
-                margin: EdgeInsets.only(left: 18, right: 18, bottom: 8),
-                child: Row(
+          child: Container(
+            margin: EdgeInsets.only(left: 18, right: 18, bottom: 8),
+            child: Observer(
+              builder: (_) {
+                return Row(
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Image.network(
@@ -117,22 +133,28 @@ class _PlayerWidget extends ModularState<PlayerWidget, PlayerController> {
                             ),
                             Container(
                               margin: EdgeInsets.all(0),
-                              child: IconButton(
-                                icon: Icon(
-                                  !controller.isPlaying.value
-                                      ? Icons.pause_circle_filled
-                                      : Icons.play_circle_fill,
-                                  color: Colors.white,
-                                  size: 38,
-                                ),
-                                onPressed: () {
-                                  if (_assetsAudioPlayer.current.value !=
-                                      null) {
-                                    controller.isPlaying =
-                                        ObservableFuture.value(
-                                            _assetsAudioPlayer.isPlaying.value);
-                                    _assetsAudioPlayer.playOrPause();
-                                  }
+                              child: Observer(
+                                builder: (_) {
+                                  return IconButton(
+                                    icon: Icon(
+                                      getStatusAudio(
+                                        controller.isPlaying.value,
+                                        _assetsAudioPlayer.isPlaying.value,
+                                      ),
+                                      color: Colors.white,
+                                      size: 38,
+                                    ),
+                                    onPressed: () {
+                                      if (_assetsAudioPlayer.current.value !=
+                                          null) {
+                                        controller.isPlaying =
+                                            ObservableFuture.value(
+                                                _assetsAudioPlayer
+                                                    .isPlaying.value);
+                                        _assetsAudioPlayer.playOrPause();
+                                      }
+                                    },
+                                  );
                                 },
                               ),
                             ),
@@ -152,9 +174,9 @@ class _PlayerWidget extends ModularState<PlayerWidget, PlayerController> {
                       ],
                     )
                   ],
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
         )
       ],
