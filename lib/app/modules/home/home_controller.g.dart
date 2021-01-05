@@ -34,6 +34,38 @@ mixin _$HomeController on _HomeControllerBase, Store {
     });
   }
 
+  final _$showOnlyFavoritesAtom =
+      Atom(name: '_HomeControllerBase.showOnlyFavorites');
+
+  @override
+  bool get showOnlyFavorites {
+    _$showOnlyFavoritesAtom.reportRead();
+    return super.showOnlyFavorites;
+  }
+
+  @override
+  set showOnlyFavorites(bool value) {
+    _$showOnlyFavoritesAtom.reportWrite(value, super.showOnlyFavorites, () {
+      super.showOnlyFavorites = value;
+    });
+  }
+
+  final _$favoritePodcastsIdsAtom =
+      Atom(name: '_HomeControllerBase.favoritePodcastsIds');
+
+  @override
+  ObservableList<String> get favoritePodcastsIds {
+    _$favoritePodcastsIdsAtom.reportRead();
+    return super.favoritePodcastsIds;
+  }
+
+  @override
+  set favoritePodcastsIds(ObservableList<String> value) {
+    _$favoritePodcastsIdsAtom.reportWrite(value, super.favoritePodcastsIds, () {
+      super.favoritePodcastsIds = value;
+    });
+  }
+
   final _$podcastSelectedAtom =
       Atom(name: '_HomeControllerBase.podcastSelected');
 
@@ -141,6 +173,8 @@ mixin _$HomeController on _HomeControllerBase, Store {
   String toString() {
     return '''
 podcasts: ${podcasts},
+showOnlyFavorites: ${showOnlyFavorites},
+favoritePodcastsIds: ${favoritePodcastsIds},
 podcastSelected: ${podcastSelected},
 statusPodcast: ${statusPodcast},
 statusPodcasts: ${statusPodcasts}

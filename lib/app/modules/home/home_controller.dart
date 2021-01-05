@@ -17,6 +17,10 @@ abstract class _HomeControllerBase with Store {
   @observable
   ObservableList<Podcast> podcasts;
 
+  @observable
+  bool showOnlyFavorites;
+
+  @observable
   ObservableList<String> favoritePodcastsIds;
 
   @observable
@@ -29,6 +33,7 @@ abstract class _HomeControllerBase with Store {
   StatusPodcast statusPodcasts = StatusPodcast.INITIAL;
 
   _HomeControllerBase(this.repository) {
+    showOnlyFavorites = false;
     fetchPodcasts();
   }
 
@@ -81,6 +86,7 @@ abstract class _HomeControllerBase with Store {
       }
     });
     _storage.put('favorites', favorites);
+    favoritePodcastsIds = await getFavoritesPodcastsIds();
   }
 
   @action
@@ -110,6 +116,7 @@ abstract class _HomeControllerBase with Store {
         favoritePodcasts.add(podcast);
       }
       podcasts = favoritePodcasts;
+      statusPodcasts = StatusPodcast.SUCCESS;
     } catch (e) {
       print(e);
       statusPodcast = StatusPodcast.ERROR;

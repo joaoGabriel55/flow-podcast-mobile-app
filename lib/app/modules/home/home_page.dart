@@ -32,16 +32,24 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
         actions: [
           Container(
             margin: EdgeInsets.all(18),
-            child: IconButton(
-              icon: Icon(
-                Icons.favorite_border,
-                color: Theme.of(context).accentColor,
-                size: 38,
-              ),
-              onPressed: () {
-                controller.fetchFavoritePodcasts();
-              },
-            ),
+            child: Observer(builder: (_) {
+              return IconButton(
+                icon: Icon(
+                  !controller.showOnlyFavorites
+                      ? Icons.favorite_border
+                      : Icons.favorite,
+                  color: Theme.of(context).accentColor,
+                  size: 38,
+                ),
+                onPressed: () {
+                  controller.showOnlyFavorites = !controller.showOnlyFavorites;
+                  if (controller.showOnlyFavorites)
+                    controller.fetchFavoritePodcasts();
+                  else
+                    controller.fetchPodcasts();
+                },
+              );
+            }),
           )
         ],
         elevation: 0,
@@ -80,6 +88,7 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
                   break;
                 case StatusPodcast.SUCCESS:
                   List<Podcast> _podcasts = controller.podcasts;
+                  List<String> favorites = controller.favoritePodcastsIds;
                   return Stack(
                     alignment: Alignment.center,
                     children: [
@@ -90,14 +99,22 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
                                 controller.podcastSelected != null ? 108 : 8),
                         itemBuilder: (context, index) {
                           return GestureDetector(
-                            child: PodcastCard(
-                              thumbnail: _podcasts[index].thumbnailUrl,
-                              title: _podcasts[index].title,
-                              description: _podcasts[index].description,
-                              isFavorite: controller.favoritePodcastsIds
-                                  .contains(_podcasts[index].id),
-                              addFavorite: () =>
-                                  controller.addOrRemoveFavorite(_podcasts[index].id),
+                            child: Observer(
+                              builder: (_) {
+                                return PodcastCard(
+                                  thumbnail: _podcasts[index].thumbnailUrl,
+                                  title: _podcasts[index].title,
+                                  description: _podcasts[index].description,
+                                  isFavorite:
+                                      favorites.contains(_podcasts[index].id),
+                                  addFavorite: () {
+                                    controller.addOrRemoveFavorite(
+                                        _podcasts[index].id);
+                                    _podcasts[index].isFavorite =
+                                        !_podcasts[index].isFavorite;
+                                  },
+                                );
+                              },
                             ),
                             onTap: () {
                               controller.selectPodcast(_podcasts[index]);
