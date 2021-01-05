@@ -1,4 +1,5 @@
 import 'package:flowpdc_app/app/shared/models/podcast.dart';
+import 'package:flowpdc_app/app/shared/repositories/localstorage/local_storage_interface.dart';
 import 'package:flowpdc_app/app/shared/repositories/podcast_repository.dart';
 import 'package:flowpdc_app/app/status/status_podcast.dart';
 import 'package:mobx/mobx.dart';
@@ -11,9 +12,12 @@ class HomeController = _HomeControllerBase with _$HomeController;
 
 abstract class _HomeControllerBase with Store {
   final PodcastRepository repository;
+  final ILocalStorage _storage = Modular.get();
 
   @observable
   ObservableList<Podcast> podcasts;
+
+  ObservableList<String> favoritePodcastsIds;
 
   @observable
   Podcast podcastSelected;
@@ -36,6 +40,7 @@ abstract class _HomeControllerBase with Store {
     try {
       statusPodcasts = StatusPodcast.LOADING;
       podcasts = await repository.getAllPodcasts();
+      favoritePodcastsIds = await getFavoritesPodcastsIds();
       statusPodcasts = StatusPodcast.SUCCESS;
     } catch (e) {
       statusPodcasts = StatusPodcast.ERROR;
@@ -55,5 +60,59 @@ abstract class _HomeControllerBase with Store {
     }
   }
 
-  // TODO: Favorite
+  @action
+  addOrRemoveFavorite(String id) async {
+    List<String> favorites = await getFavoritesPodcastsIds();
+    if (favorites == null) {
+      _storage.put('favorites', List());
+      favorites = await getFavoritesPodcastsIds();
+    }
+    Podcast podcastFavorited = await repository.getPodcast(id).asObservable();
+    if (!favorites.contains(id)) {
+      favorites.add(id);
+      podcastFavorited.isFavorite = true;
+    } else {
+      favorites.remove(id);
+      podcastFavorited.isFavorite = false;
+    }
+    podcasts.forEach((element) {
+      if (element.id == podcastFavorited.id) {
+        element = podcastFavorited;
+      }
+    });
+    _storage.put('favorites', favorites);
+  }
+
+  @action
+  getFavoritesPodcastsIds() async {
+    try {
+      List<String> favorites = await _storage.get('favorites');
+      if (favorites == null) {
+        _storage.put('favorites', List());
+        favorites = await _storage.get('favorites');
+      }
+      return favorites.asObservable();
+    } catch (e) {
+      print(e);
+      throw Exception(e.toString());
+    }
+  }
+
+  @action
+  fetchFavoritePodcasts() async {
+    try {
+      statusPodcasts = StatusPodcast.LOADING;
+      List<String> favorites = await getFavoritesPodcastsIds();
+
+      ObservableList<Podcast> favoritePodcasts = ObservableList<Podcast>();
+      for (String id in favorites) {
+        Podcast podcast = await repository.getPodcast(id);
+        favoritePodcasts.add(podcast);
+      }
+      podcasts = favoritePodcasts;
+    } catch (e) {
+      print(e);
+      statusPodcast = StatusPodcast.ERROR;
+    }
+  }
 }

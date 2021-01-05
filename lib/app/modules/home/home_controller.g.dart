@@ -96,6 +96,33 @@ mixin _$HomeController on _HomeControllerBase, Store {
     return _$fetchPodcastAsyncAction.run(() => super.fetchPodcast(id));
   }
 
+  final _$addOrRemoveFavoriteAsyncAction =
+      AsyncAction('_HomeControllerBase.addOrRemoveFavorite');
+
+  @override
+  Future addOrRemoveFavorite(String id) {
+    return _$addOrRemoveFavoriteAsyncAction
+        .run(() => super.addOrRemoveFavorite(id));
+  }
+
+  final _$getFavoritesPodcastsIdsAsyncAction =
+      AsyncAction('_HomeControllerBase.getFavoritesPodcastsIds');
+
+  @override
+  Future getFavoritesPodcastsIds() {
+    return _$getFavoritesPodcastsIdsAsyncAction
+        .run(() => super.getFavoritesPodcastsIds());
+  }
+
+  final _$fetchFavoritePodcastsAsyncAction =
+      AsyncAction('_HomeControllerBase.fetchFavoritePodcasts');
+
+  @override
+  Future fetchFavoritePodcasts() {
+    return _$fetchFavoritePodcastsAsyncAction
+        .run(() => super.fetchFavoritePodcasts());
+  }
+
   final _$_HomeControllerBaseActionController =
       ActionController(name: '_HomeControllerBase');
 

@@ -4,9 +4,17 @@ class PodcastCard extends StatefulWidget {
   final String thumbnail;
   final String title;
   final String description;
+  final bool isFavorite;
+  final Function addFavorite;
 
-  const PodcastCard({Key key, this.title, this.description, this.thumbnail})
-      : super(key: key);
+  const PodcastCard({
+    Key key,
+    this.title,
+    this.description,
+    this.thumbnail,
+    this.addFavorite,
+    this.isFavorite,
+  }) : super(key: key);
   @override
   _PodcastCard createState() => new _PodcastCard();
 }
@@ -74,11 +82,11 @@ class _PodcastCard extends State<PodcastCard> {
               margin: EdgeInsets.all(8),
               child: IconButton(
                 icon: Icon(
-                  Icons.favorite,
+                  this.widget.isFavorite ? Icons.favorite : Icons.favorite_border,
                   color: Theme.of(context).accentColor,
                   size: 28,
                 ),
-                onPressed: () {},
+                onPressed: this.widget.addFavorite,
               ),
             )
           ],

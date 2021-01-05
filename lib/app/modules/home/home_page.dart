@@ -1,12 +1,10 @@
 import 'package:flowpdc_app/app/shared/models/podcast.dart';
 import 'package:flowpdc_app/app/status/status_podcast.dart';
-import 'package:flowpdc_app/app/widgets/player/player_controller.dart';
 import 'package:flowpdc_app/app/widgets/player/player_widget.dart';
 import 'package:flowpdc_app/app/widgets/podcast_card/podcast_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:mobx/mobx.dart';
 import 'home_controller.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,8 +17,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends ModularState<HomePage, HomeController> {
-  //use 'controller' variable to access controller
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,10 +32,15 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
         actions: [
           Container(
             margin: EdgeInsets.all(18),
-            child: Icon(
-              Icons.favorite,
-              color: Theme.of(context).accentColor,
-              size: 38,
+            child: IconButton(
+              icon: Icon(
+                Icons.favorite_border,
+                color: Theme.of(context).accentColor,
+                size: 38,
+              ),
+              onPressed: () {
+                controller.fetchFavoritePodcasts();
+              },
             ),
           )
         ],
@@ -84,13 +85,19 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
                     children: [
                       ListView.builder(
                         itemCount: _podcasts.length,
-                        padding: EdgeInsets.only(bottom: controller.podcastSelected != null ? 108 : 8),
+                        padding: EdgeInsets.only(
+                            bottom:
+                                controller.podcastSelected != null ? 108 : 8),
                         itemBuilder: (context, index) {
                           return GestureDetector(
                             child: PodcastCard(
                               thumbnail: _podcasts[index].thumbnailUrl,
                               title: _podcasts[index].title,
                               description: _podcasts[index].description,
+                              isFavorite: controller.favoritePodcastsIds
+                                  .contains(_podcasts[index].id),
+                              addFavorite: () =>
+                                  controller.addOrRemoveFavorite(_podcasts[index].id),
                             ),
                             onTap: () {
                               controller.selectPodcast(_podcasts[index]);
