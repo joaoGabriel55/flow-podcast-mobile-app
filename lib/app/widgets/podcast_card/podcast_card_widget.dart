@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../podcast_thumbnail.dart';
+
 class PodcastCard extends StatefulWidget {
   final String thumbnail;
   final String title;
@@ -38,11 +40,7 @@ class _PodcastCard extends State<PodcastCard> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             widget.thumbnail != null
-                ? Image.network(
-                    widget.thumbnail,
-                    width: 80,
-                    fit: BoxFit.fill,
-                  )
+                ? PodcastThumbnail(url: this.widget.thumbnail)
                 : Container(
                     width: 80,
                     child: Icon(

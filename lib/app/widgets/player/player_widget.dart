@@ -7,6 +7,8 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 
+import '../podcast_thumbnail.dart';
+
 class PlayerWidget extends StatefulWidget {
   final Podcast podcast;
   final bool isFavorite;
@@ -87,11 +89,7 @@ class _PlayerWidget extends ModularState<PlayerWidget, PlayerController> {
                 return Row(
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    Image.network(
-                      widget.podcast.thumbnailUrl,
-                      width: 80,
-                      fit: BoxFit.fill,
-                    ),
+                    PodcastThumbnail(url:  widget.podcast.thumbnailUrl),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
