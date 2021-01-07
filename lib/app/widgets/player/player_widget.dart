@@ -9,8 +9,11 @@ import 'package:mobx/mobx.dart';
 
 class PlayerWidget extends StatefulWidget {
   final Podcast podcast;
+  final bool isFavorite;
+  final Function addFavorite;
 
-  const PlayerWidget({Key key, this.podcast}) : super(key: key);
+  const PlayerWidget({Key key, this.podcast, this.addFavorite, this.isFavorite})
+      : super(key: key);
 
   @override
   _PlayerWidget createState() => new _PlayerWidget();
@@ -19,6 +22,13 @@ class PlayerWidget extends StatefulWidget {
 class _PlayerWidget extends ModularState<PlayerWidget, PlayerController> {
   final _assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
   String _currentAudio;
+
+  @override
+  void dispose() {
+    super.dispose();
+    _assetsAudioPlayer.stop();
+    _assetsAudioPlayer.dispose();
+  }
 
   void _loadAudio(String url) {
     _assetsAudioPlayer.stop();
@@ -162,11 +172,13 @@ class _PlayerWidget extends ModularState<PlayerWidget, PlayerController> {
                               margin: EdgeInsets.all(0),
                               child: IconButton(
                                 icon: Icon(
-                                  Icons.favorite,
+                                  this.widget.isFavorite
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
                                   color: Theme.of(context).accentColor,
                                   size: 38,
                                 ),
-                                onPressed: () {},
+                                onPressed: this.widget.addFavorite,
                               ),
                             )
                           ],

@@ -23,10 +23,19 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
       appBar: AppBar(
         toolbarHeight: 80,
         flexibleSpace: Container(
-          margin: EdgeInsets.only(top: 18),
+          margin: EdgeInsets.only(top: 48),
           child: Image(
             image: AssetImage('images/logo.png'),
             fit: BoxFit.contain,
+          ),
+          decoration: BoxDecoration(
+            color: Theme.of(context).primaryColor,
+            border: Border(
+              bottom: BorderSide(
+                width: 1.0,
+                color: Colors.white,
+              ),
+            ),
           ),
         ),
         actions: [
@@ -163,8 +172,14 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
                       Observer(
                         builder: (_) {
                           if (controller.podcastSelected != null) {
+                            Podcast podcast = controller.podcastSelected;
                             return PlayerWidget(
-                                podcast: controller.podcastSelected);
+                              podcast: podcast,
+                              isFavorite: favorites.contains(podcast.id),
+                              addFavorite: () {
+                                controller.addOrRemoveFavorite(podcast.id);
+                              },
+                            );
                           } else {
                             return Divider();
                           }
