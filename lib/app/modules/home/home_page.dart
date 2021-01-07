@@ -17,6 +17,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends ModularState<HomePage, HomeController> {
+  void _loadPodcasts() {
+    controller.selectPodcast(null);
+    if (controller.showOnlyFavorites)
+      controller.fetchFavoritePodcasts();
+    else
+      controller.fetchPodcasts(null);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,10 +60,7 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
                 ),
                 onPressed: () {
                   controller.showOnlyFavorites = !controller.showOnlyFavorites;
-                  if (controller.showOnlyFavorites)
-                    controller.fetchFavoritePodcasts();
-                  else
-                    controller.fetchPodcasts(null);
+                  _loadPodcasts();
                 },
               );
             }),
@@ -90,10 +95,7 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
                         style: TextStyle(color: Colors.black),
                       ),
                       onPressed: () {
-                        if (controller.showOnlyFavorites)
-                          controller.fetchFavoritePodcasts();
-                        else
-                          controller.fetchPodcasts(null);
+                        _loadPodcasts();
                       },
                     ),
                   );
@@ -123,7 +125,6 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
                     );
                   }
 
-                  print("HEY -> " + controller.loadMoreNextParameter);
                   return Stack(
                     alignment: Alignment.center,
                     children: [
@@ -132,9 +133,11 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
                         onNotification: (ScrollNotification scrollInfo) {
                           if (scrollInfo.metrics.pixels ==
                               scrollInfo.metrics.maxScrollExtent) {
-                            controller.fetchPodcasts(
-                              controller.loadMoreNextParameter,
-                            );
+                            if (!controller.showOnlyFavorites) {
+                              controller.fetchPodcasts(
+                                controller.loadMoreNextParameter,
+                              );
+                            }
                           }
                         },
                         child: ListView.builder(

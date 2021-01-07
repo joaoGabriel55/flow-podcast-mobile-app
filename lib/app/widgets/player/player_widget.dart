@@ -67,8 +67,6 @@ class _PlayerWidget extends ModularState<PlayerWidget, PlayerController> {
       _currentAudio = widget.podcast.audioUrl;
       _loadAudio(_currentAudio);
     }
-    controller.isPlaying =
-        ObservableFuture.value(_assetsAudioPlayer.isPlaying.value);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.max,
@@ -86,10 +84,12 @@ class _PlayerWidget extends ModularState<PlayerWidget, PlayerController> {
             margin: EdgeInsets.only(left: 18, right: 18, bottom: 8),
             child: Observer(
               builder: (_) {
+                controller.isPlaying =
+                    ObservableFuture.value(_assetsAudioPlayer.isPlaying.value);
                 return Row(
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    PodcastThumbnail(url:  widget.podcast.thumbnailUrl),
+                    PodcastThumbnail(url: widget.podcast.thumbnailUrl),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
