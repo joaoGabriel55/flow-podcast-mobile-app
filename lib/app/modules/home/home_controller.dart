@@ -2,8 +2,8 @@ import 'package:flowpdc_app/app/shared/models/podcast.dart';
 import 'package:flowpdc_app/app/shared/repositories/localstorage/local_storage_interface.dart';
 import 'package:flowpdc_app/app/shared/repositories/podcast_repository.dart';
 import 'package:flowpdc_app/app/status/status_podcast.dart';
-import 'package:mobx/mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:mobx/mobx.dart';
 
 part 'home_controller.g.dart';
 
@@ -15,7 +15,10 @@ abstract class _HomeControllerBase with Store {
   final ILocalStorage _storage = Modular.get();
 
   @observable
-  ObservableList<Podcast> podcasts;
+  ObservableMap<String, Podcast> podcasts;
+
+  @observable
+  String loadMoreNextParameter;
 
   @observable
   bool showOnlyFavorites;
@@ -34,19 +37,28 @@ abstract class _HomeControllerBase with Store {
 
   _HomeControllerBase(this.repository) {
     showOnlyFavorites = false;
-    fetchPodcasts();
+    fetchPodcasts(null);
   }
 
   @action
   selectPodcast(Podcast podcast) => podcastSelected = podcast;
 
   @action
-  fetchPodcasts() async {
+  fetchPodcasts(String nextPaging) async {
     try {
-      statusPodcasts = StatusPodcast.LOADING;
-      podcasts = await repository.getAllPodcasts();
-      favoritePodcastsIds = await getFavoritesPodcastsIds();
+      PodcastResponse result;
+      if (nextPaging == null) {
+        statusPodcasts = StatusPodcast.LOADING;
+        result = await repository.getAllPodcasts();
+        podcasts = ObservableMap<String, Podcast>();
+      } else {
+        result = await repository.loadMorePodcasts(nextPaging);
+      }
+      loadMoreNextParameter = result.next;
+      podcasts.addAll(result.podcastMap.asObservable());
+
       statusPodcasts = StatusPodcast.SUCCESS;
+      favoritePodcastsIds = await getFavoritesPodcastsIds();
     } catch (e) {
       statusPodcasts = StatusPodcast.ERROR;
       //statusPodcasts.setMensagem = "Ex mensagem de erro";
@@ -80,11 +92,11 @@ abstract class _HomeControllerBase with Store {
       favorites.remove(id);
       podcastFavorited.isFavorite = false;
     }
-    podcasts.forEach((element) {
-      if (element.id == podcastFavorited.id) {
-        element = podcastFavorited;
-      }
-    });
+
+    if (podcasts.containsKey(podcastFavorited.id)) {
+      podcasts[podcastFavorited.id] = podcastFavorited;
+    }
+
     _storage.put('favorites', favorites);
     favoritePodcastsIds = await getFavoritesPodcastsIds();
   }
@@ -99,7 +111,6 @@ abstract class _HomeControllerBase with Store {
       }
       return favorites.asObservable();
     } catch (e) {
-      print(e);
       throw Exception(e.toString());
     }
   }
@@ -110,15 +121,16 @@ abstract class _HomeControllerBase with Store {
       statusPodcasts = StatusPodcast.LOADING;
       List<String> favorites = await getFavoritesPodcastsIds();
 
-      ObservableList<Podcast> favoritePodcasts = ObservableList<Podcast>();
+      ObservableMap<String, Podcast> favoritePodcasts =
+          ObservableMap<String, Podcast>();
+
       for (String id in favorites) {
         Podcast podcast = await repository.getPodcast(id);
-        favoritePodcasts.add(podcast);
+        favoritePodcasts[podcast.id] = podcast;
       }
       podcasts = favoritePodcasts;
       statusPodcasts = StatusPodcast.SUCCESS;
     } catch (e) {
-      print(e);
       statusPodcast = StatusPodcast.ERROR;
     }
   }

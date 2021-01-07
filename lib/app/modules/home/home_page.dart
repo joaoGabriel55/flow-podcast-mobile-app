@@ -46,7 +46,7 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
                   if (controller.showOnlyFavorites)
                     controller.fetchFavoritePodcasts();
                   else
-                    controller.fetchPodcasts();
+                    controller.fetchPodcasts(null);
                 },
               );
             }),
@@ -73,8 +73,18 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
                 case StatusPodcast.ERROR:
                   return Center(
                     child: RaisedButton(
+                      color: Colors.amber,
+                      child: Text(
+                        !controller.showOnlyFavorites
+                            ? "Load podcasts again"
+                            : "Load favorite podcasts again",
+                        style: TextStyle(color: Colors.black),
+                      ),
                       onPressed: () {
-                        controller.fetchPodcasts();
+                        if (controller.showOnlyFavorites)
+                          controller.fetchFavoritePodcasts();
+                        else
+                          controller.fetchPodcasts(null);
                       },
                     ),
                   );
@@ -82,45 +92,73 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
                 case StatusPodcast.LOADING:
                   return Center(
                     child: CircularProgressIndicator(
-                      backgroundColor: Colors.amber,
+                      backgroundColor: Colors.black,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),
                     ),
                   );
                   break;
                 case StatusPodcast.SUCCESS:
-                  List<Podcast> _podcasts = controller.podcasts;
+                  Map<String, Podcast> _podcastMap = controller.podcasts;
+                  List<String> _podcasts = _podcastMap.keys.toList();
                   List<String> favorites = controller.favoritePodcastsIds;
+
+                  if (_podcasts.isEmpty) {
+                    return Container(
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width,
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Podcasts not found...",
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                    );
+                  }
+
+                  print("HEY -> " + controller.loadMoreNextParameter);
                   return Stack(
                     alignment: Alignment.center,
                     children: [
-                      ListView.builder(
-                        itemCount: _podcasts.length,
-                        padding: EdgeInsets.only(
-                            bottom:
-                                controller.podcastSelected != null ? 108 : 8),
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            child: Observer(
-                              builder: (_) {
-                                return PodcastCard(
-                                  thumbnail: _podcasts[index].thumbnailUrl,
-                                  title: _podcasts[index].title,
-                                  description: _podcasts[index].description,
-                                  isFavorite:
-                                      favorites.contains(_podcasts[index].id),
-                                  addFavorite: () {
-                                    controller.addOrRemoveFavorite(
-                                        _podcasts[index].id);
-                                    _podcasts[index].isFavorite =
-                                        !_podcasts[index].isFavorite;
-                                  },
-                                );
-                              },
-                            ),
-                            onTap: () {
-                              controller.selectPodcast(_podcasts[index]);
-                            },
-                          );
+                      NotificationListener<ScrollNotification>(
+                        // ignore: missing_return
+                        onNotification: (ScrollNotification scrollInfo) {
+                          if (scrollInfo.metrics.pixels ==
+                              scrollInfo.metrics.maxScrollExtent) {
+                            controller.fetchPodcasts(
+                              controller.loadMoreNextParameter,
+                            );
+                          }
                         },
+                        child: ListView.builder(
+                          itemCount: _podcasts.length,
+                          padding: EdgeInsets.only(
+                            bottom:
+                                controller.podcastSelected != null ? 108 : 8,
+                          ),
+                          itemBuilder: (context, index) {
+                            Podcast _podcast = _podcastMap[_podcasts[index]];
+                            return GestureDetector(
+                              child: Observer(
+                                builder: (_) {
+                                  return PodcastCard(
+                                    thumbnail: _podcast.thumbnailUrl,
+                                    title: _podcast.title,
+                                    description: _podcast.description,
+                                    isFavorite: favorites.contains(_podcast.id),
+                                    addFavorite: () {
+                                      controller
+                                          .addOrRemoveFavorite(_podcast.id);
+                                      _podcast.isFavorite =
+                                          !_podcast.isFavorite;
+                                    },
+                                  );
+                                },
+                              ),
+                              onTap: () {
+                                controller.selectPodcast(_podcast);
+                              },
+                            );
+                          },
+                        ),
                       ),
                       Observer(
                         builder: (_) {

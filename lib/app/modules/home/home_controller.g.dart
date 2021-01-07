@@ -22,15 +22,32 @@ mixin _$HomeController on _HomeControllerBase, Store {
   final _$podcastsAtom = Atom(name: '_HomeControllerBase.podcasts');
 
   @override
-  ObservableList<Podcast> get podcasts {
+  ObservableMap<String, Podcast> get podcasts {
     _$podcastsAtom.reportRead();
     return super.podcasts;
   }
 
   @override
-  set podcasts(ObservableList<Podcast> value) {
+  set podcasts(ObservableMap<String, Podcast> value) {
     _$podcastsAtom.reportWrite(value, super.podcasts, () {
       super.podcasts = value;
+    });
+  }
+
+  final _$loadMoreNextParameterAtom =
+      Atom(name: '_HomeControllerBase.loadMoreNextParameter');
+
+  @override
+  String get loadMoreNextParameter {
+    _$loadMoreNextParameterAtom.reportRead();
+    return super.loadMoreNextParameter;
+  }
+
+  @override
+  set loadMoreNextParameter(String value) {
+    _$loadMoreNextParameterAtom.reportWrite(value, super.loadMoreNextParameter,
+        () {
+      super.loadMoreNextParameter = value;
     });
   }
 
@@ -116,8 +133,9 @@ mixin _$HomeController on _HomeControllerBase, Store {
       AsyncAction('_HomeControllerBase.fetchPodcasts');
 
   @override
-  Future fetchPodcasts() {
-    return _$fetchPodcastsAsyncAction.run(() => super.fetchPodcasts());
+  Future fetchPodcasts(String nextPaging) {
+    return _$fetchPodcastsAsyncAction
+        .run(() => super.fetchPodcasts(nextPaging));
   }
 
   final _$fetchPodcastAsyncAction =
@@ -173,6 +191,7 @@ mixin _$HomeController on _HomeControllerBase, Store {
   String toString() {
     return '''
 podcasts: ${podcasts},
+loadMoreNextParameter: ${loadMoreNextParameter},
 showOnlyFavorites: ${showOnlyFavorites},
 favoritePodcastsIds: ${favoritePodcastsIds},
 podcastSelected: ${podcastSelected},

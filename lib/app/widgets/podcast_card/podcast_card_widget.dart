@@ -37,11 +37,20 @@ class _PodcastCard extends State<PodcastCard> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Image.network(
-              widget.thumbnail,
-              width: 80,
-              fit: BoxFit.fill,
-            ),
+            widget.thumbnail != null
+                ? Image.network(
+                    widget.thumbnail,
+                    width: 80,
+                    fit: BoxFit.fill,
+                  )
+                : Container(
+                    width: 80,
+                    child: Icon(
+                      Icons.audiotrack,
+                      color: Theme.of(context).accentColor,
+                      size: 48,
+                    ),
+                  ),
             Expanded(
               child: Container(
                 margin: EdgeInsets.only(left: 18),
@@ -82,7 +91,9 @@ class _PodcastCard extends State<PodcastCard> {
               margin: EdgeInsets.all(8),
               child: IconButton(
                 icon: Icon(
-                  this.widget.isFavorite ? Icons.favorite : Icons.favorite_border,
+                  this.widget.isFavorite
+                      ? Icons.favorite
+                      : Icons.favorite_border,
                   color: Theme.of(context).accentColor,
                   size: 28,
                 ),
