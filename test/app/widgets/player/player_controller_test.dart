@@ -1,8 +1,6 @@
+import 'package:flowpdc_app/app/app_module.dart';
 import 'package:flutter_modular/flutter_modular_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:flowpdc_app/app/widgets/player/player_controller.dart';
-import 'package:flowpdc_app/app/app_module.dart';
 
 void main() {
   initModule(AppModule());

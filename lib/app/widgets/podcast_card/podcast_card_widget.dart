@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 
+import '../podcast_thumbnail.dart';
+
 class PodcastCard extends StatefulWidget {
   final String thumbnail;
   final String title;
   final String description;
+  final bool isFavorite;
+  final Function addFavorite;
 
-  const PodcastCard({Key key, this.title, this.description, this.thumbnail})
-      : super(key: key);
+  const PodcastCard({
+    Key key,
+    this.title,
+    this.description,
+    this.thumbnail,
+    this.addFavorite,
+    this.isFavorite,
+  }) : super(key: key);
   @override
   _PodcastCard createState() => new _PodcastCard();
 }
@@ -29,11 +39,16 @@ class _PodcastCard extends State<PodcastCard> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Image.network(
-              widget.thumbnail,
-              width: 80,
-              fit: BoxFit.fill,
-            ),
+            widget.thumbnail != null
+                ? PodcastThumbnail(url: this.widget.thumbnail)
+                : Container(
+                    width: 80,
+                    child: Icon(
+                      Icons.audiotrack,
+                      color: Theme.of(context).accentColor,
+                      size: 48,
+                    ),
+                  ),
             Expanded(
               child: Container(
                 margin: EdgeInsets.only(left: 18),
@@ -46,10 +61,12 @@ class _PodcastCard extends State<PodcastCard> {
                       width: MediaQuery.of(context).size.width * 0.5,
                       child: Text(
                         widget.title,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700),
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                     Container(
@@ -57,6 +74,7 @@ class _PodcastCard extends State<PodcastCard> {
                       width: MediaQuery.of(context).size.width * 0.5,
                       child: Text(
                         widget.description,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 14,
@@ -70,9 +88,14 @@ class _PodcastCard extends State<PodcastCard> {
             Container(
               margin: EdgeInsets.all(8),
               child: IconButton(
-                icon: Icon(Icons.favorite,
-                    color: Theme.of(context).accentColor, size: 28),
-                onPressed: () {},
+                icon: Icon(
+                  this.widget.isFavorite
+                      ? Icons.favorite
+                      : Icons.favorite_border,
+                  color: Theme.of(context).accentColor,
+                  size: 28,
+                ),
+                onPressed: this.widget.addFavorite,
               ),
             )
           ],

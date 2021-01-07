@@ -1,4 +1,4 @@
-package com.example.flowpdc_app
+package com.alamedapps.flowpdc_app
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -26,6 +26,8 @@ scripts:
     mobx_build: $runner build
     mobx_watch: $clean & $get & $runner watch
     mobx_build_clean: $clean & $get & $runner build --delete-conflicting-outputs
+    android-build: flutter build apk --split-per-abi
+    android-install: flutter install
 
 
 
@@ -52,9 +54,14 @@ dev_dependencies:
   modular_codegen: ^2.0.1
   mobx_codegen: ^1.1.2
   build_runner: ^1.10.1
+  flutter_launcher_icons: ^0.8.1
   flutter_test:
     sdk: flutter
 
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "images/app_logo.jpg"
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

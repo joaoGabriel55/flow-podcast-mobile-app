@@ -8,11 +8,4 @@ class PodcastCardController = _PodcastCardControllerBase
     with _$PodcastCardController;
 
 abstract class _PodcastCardControllerBase with Store {
-  @observable
-  int value = 0;
-
-  @action
-  void increment() {
-    value++;
-  }
 }

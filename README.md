@@ -4,5 +4,5 @@
 
 - Listar [ok]
 - Load more
-- Play/Pause audio de podcast selecionado
+- Play/Pause audio de podcast selecionado [ok]
 - Favoritar

@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:flowpdc_app/app/shared/repositories/localstorage/local_storage_interface.dart';
+import 'package:flowpdc_app/app/shared/repositories/localstorage/local_storage_shared_prefs.dart';
 import 'package:flowpdc_app/app/shared/utils/constants.dart';
 
 import 'widgets/podcast_card/podcast_card_controller.dart';
@@ -17,6 +19,7 @@ class AppModule extends MainModule {
         $PlayerController,
         $PodcastSelectedController,
         $AppController,
+        Bind<ILocalStorage>((i) => LocalStorageSharedPrefs()),
         Bind((i) => Dio(BaseOptions(baseUrl: FLOWPDC_API)))
       ];
 
