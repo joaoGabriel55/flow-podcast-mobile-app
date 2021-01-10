@@ -3,6 +3,7 @@ import 'package:flowpdc_app/app/shared/models/podcast.dart';
 import 'package:flowpdc_app/app/widgets/player/player_controller.dart';
 import 'package:flowpdc_app/app/widgets/player/position_seek_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
@@ -13,9 +14,15 @@ class PlayerWidget extends StatefulWidget {
   final Podcast podcast;
   final bool isFavorite;
   final Function addFavorite;
+  final Function closePlayer;
 
-  const PlayerWidget({Key key, this.podcast, this.addFavorite, this.isFavorite})
-      : super(key: key);
+  const PlayerWidget({
+    Key key,
+    this.podcast,
+    this.addFavorite,
+    this.isFavorite,
+    this.closePlayer,
+  }) : super(key: key);
 
   @override
   _PlayerWidget createState() => new _PlayerWidget();
@@ -45,9 +52,14 @@ class _PlayerWidget extends ModularState<PlayerWidget, PlayerController> {
       autoStart: true,
       showNotification: true,
       notificationSettings: NotificationSettings(
-        nextEnabled: false,
-        prevEnabled: false,
-      ),
+          nextEnabled: false,
+          prevEnabled: false,
+          customStopAction: (player) => {
+                player.stop(),
+                this.widget.closePlayer(),
+              }
+          // customPlayPauseAction: (player) => player.playOrPause(),
+          ),
     );
   }
 
@@ -126,13 +138,18 @@ class _PlayerWidget extends ModularState<PlayerWidget, PlayerController> {
                                   Container(
                                     width:
                                         MediaQuery.of(context).size.width * 0.4,
-                                    child: Text(
-                                      widget.podcast.title,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w700,
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Text(
+                                        widget.podcast.title,
+                                        overflow: TextOverflow.fade,
+                                        softWrap: true,
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w700,
+                                        ),
                                       ),
                                     ),
                                   )

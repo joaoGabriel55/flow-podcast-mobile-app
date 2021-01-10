@@ -5,14 +5,12 @@ import '../podcast_thumbnail.dart';
 class PodcastCard extends StatefulWidget {
   final String thumbnail;
   final String title;
-  final String description;
   final bool isFavorite;
   final Function addFavorite;
 
   const PodcastCard({
     Key key,
     this.title,
-    this.description,
     this.thumbnail,
     this.addFavorite,
     this.isFavorite,
@@ -61,7 +59,7 @@ class _PodcastCard extends State<PodcastCard> {
                       width: MediaQuery.of(context).size.width * 0.5,
                       child: Text(
                         widget.title,
-                        overflow: TextOverflow.ellipsis,
+                        overflow: TextOverflow.fade,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
@@ -69,18 +67,6 @@ class _PodcastCard extends State<PodcastCard> {
                         ),
                       ),
                     ),
-                    Container(
-                      padding: EdgeInsets.only(top: 8),
-                      width: MediaQuery.of(context).size.width * 0.5,
-                      child: Text(
-                        widget.description,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                        ),
-                      ),
-                    )
                   ],
                 ),
               ),
