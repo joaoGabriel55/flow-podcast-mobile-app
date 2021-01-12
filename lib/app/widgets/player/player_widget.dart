@@ -81,7 +81,6 @@ class _PlayerWidget extends ModularState<PlayerWidget, PlayerController> {
     }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
         Container(
@@ -91,73 +90,67 @@ class _PlayerWidget extends ModularState<PlayerWidget, PlayerController> {
               top: BorderSide(width: 1.0, color: Colors.white),
             ),
           ),
-          margin: EdgeInsets.all(0),
           child: Container(
-            margin: EdgeInsets.only(left: 18, right: 18, bottom: 8),
+            // margin: EdgeInsets.only(left: 18, right: 18, bottom: 8),
             child: Observer(
               builder: (_) {
                 controller.isPlaying =
                     ObservableFuture.value(_assetsAudioPlayer.isPlaying.value);
-                return Row(
-                  mainAxisSize: MainAxisSize.max,
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    PodcastThumbnail(url: widget.podcast.thumbnailUrl),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.all(0),
-                          padding: EdgeInsets.all(0),
-                          width: MediaQuery.of(context).size.width * 0.7,
-                          child: StreamBuilder(
-                            stream: _assetsAudioPlayer.realtimePlayingInfos,
-                            builder: (context, snapshot) {
-                              if (!snapshot.hasData) {
-                                return SizedBox();
-                              }
-                              RealtimePlayingInfos infos = snapshot.data;
-                              return PositionSeekWidget(
-                                seekTo: (to) {
-                                  _assetsAudioPlayer.seek(to);
-                                },
-                                duration: infos.duration,
-                                currentPosition: infos.currentPosition,
-                              );
+                    Container(
+                      margin: EdgeInsets.only(right: 8),
+                      width: MediaQuery.of(context).size.width,
+                      child: StreamBuilder(
+                        stream: _assetsAudioPlayer.realtimePlayingInfos,
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return SizedBox();
+                          }
+                          RealtimePlayingInfos infos = snapshot.data;
+                          return PositionSeekWidget(
+                            seekTo: (to) {
+                              _assetsAudioPlayer.seek(to);
                             },
+                            duration: infos.duration,
+                            currentPosition: infos.currentPosition,
+                          );
+                        },
+                      ),
+                    ),
+                    Container(
+                      child: ListTile(
+                        leading: Container(
+                          width: 48,
+                          child: PodcastThumbnail(
+                            url: widget.podcast.thumbnailUrl,
                           ),
                         ),
-                        Row(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(left: 24),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.4,
-                                    child: SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
-                                      child: Text(
-                                        widget.podcast.title,
-                                        overflow: TextOverflow.fade,
-                                        softWrap: true,
-                                        maxLines: 1,
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ],
+                        title: Container(
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Text(
+                              widget.podcast.title,
+                              overflow: TextOverflow.fade,
+                              softWrap: true,
+                              maxLines: 1,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
                               ),
                             ),
+                          ),
+                        ),
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+                        trailing: Wrap(
+                          spacing: 12, // space between two icons
+                          children: <Widget>[
                             Container(
-                              margin: EdgeInsets.all(0),
                               child: Observer(
                                 builder: (_) {
                                   return IconButton(
@@ -198,7 +191,7 @@ class _PlayerWidget extends ModularState<PlayerWidget, PlayerController> {
                             )
                           ],
                         ),
-                      ],
+                      ),
                     )
                   ],
                 );
