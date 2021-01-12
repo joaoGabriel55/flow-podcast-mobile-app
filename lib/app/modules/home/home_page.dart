@@ -2,6 +2,7 @@ import 'package:flowpdc_app/app/shared/models/podcast.dart';
 import 'package:flowpdc_app/app/status/status_podcast.dart';
 import 'package:flowpdc_app/app/widgets/player/player_widget.dart';
 import 'package:flowpdc_app/app/widgets/podcast_card/podcast_card_widget.dart';
+import 'package:flowpdc_app/app/widgets/podcast_description_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -154,7 +155,6 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
                                   return PodcastCard(
                                     thumbnail: _podcast.thumbnailUrl,
                                     title: _podcast.title,
-                                    description: _podcast.description,
                                     isFavorite: favorites.contains(_podcast.id),
                                     addFavorite: () {
                                       controller
@@ -167,6 +167,18 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
                               ),
                               onTap: () {
                                 controller.selectPodcast(_podcast);
+                              },
+                              onLongPress: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return PodcastDescriptionDialog(
+                                      title: _podcast.title,
+                                      description: _podcast.description,
+                                      thumbnail: _podcast.thumbnailUrl,
+                                    );
+                                  },
+                                );
                               },
                             );
                           },
@@ -181,6 +193,9 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
                               isFavorite: favorites.contains(podcast.id),
                               addFavorite: () {
                                 controller.addOrRemoveFavorite(podcast.id);
+                              },
+                              closePlayer: () {
+                                controller.selectPodcast(null);
                               },
                             );
                           } else {
