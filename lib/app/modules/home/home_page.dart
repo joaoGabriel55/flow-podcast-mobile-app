@@ -19,7 +19,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends ModularState<HomePage, HomeController> {
   void _loadPodcasts() {
-    controller.selectPodcast(null);
     if (controller.showOnlyFavorites)
       controller.fetchFavoritePodcasts();
     else

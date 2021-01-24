@@ -51,14 +51,17 @@ class _PlayerWidget extends ModularState<PlayerWidget, PlayerController> {
       autoStart: true,
       showNotification: true,
       notificationSettings: NotificationSettings(
-          nextEnabled: false,
-          prevEnabled: false,
-          customStopAction: (player) => {
-                player.stop(),
-                this.widget.closePlayer(),
-              }
-          // customPlayPauseAction: (player) => player.playOrPause(),
-          ),
+        nextEnabled: false,
+        prevEnabled: false,
+        customPlayPauseAction: (player) {
+          controller.isPlaying = !controller.isPlaying;
+          player.playOrPause();
+        },
+        customStopAction: (player) => {
+          player.stop(),
+          this.widget.closePlayer(),
+        },
+      ),
     );
   }
 
@@ -71,13 +74,9 @@ class _PlayerWidget extends ModularState<PlayerWidget, PlayerController> {
 
   @override
   Widget build(BuildContext context) {
-    if (_currentAudio == null) {
-      _currentAudio = widget.podcast.audioUrl;
-      _loadAudio(_currentAudio);
-    } else if (_currentAudio != widget.podcast.audioUrl) {
-      _currentAudio = widget.podcast.audioUrl;
-      _loadAudio(_currentAudio);
-    }
+    _currentAudio = widget.podcast.audioUrl;
+    _loadAudio(_currentAudio);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisAlignment: MainAxisAlignment.end,
