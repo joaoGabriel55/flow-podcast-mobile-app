@@ -37,6 +37,7 @@ abstract class _HomeControllerBase with Store {
 
   _HomeControllerBase(this.repository) {
     showOnlyFavorites = false;
+    this.podcasts = ObservableMap<String, Podcast>();
     fetchPodcasts(null);
   }
 
@@ -47,7 +48,6 @@ abstract class _HomeControllerBase with Store {
   fetchPodcasts(String nextPaging) async {
     try {
       PodcastResponse result;
-      podcasts = ObservableMap<String, Podcast>();
       if (nextPaging == null && podcasts.isEmpty) {
         statusPodcasts = StatusPodcast.LOADING;
         result = await repository.getAllPodcasts();
