@@ -47,7 +47,7 @@ abstract class _HomeControllerBase with Store {
   fetchPodcasts(String nextPaging) async {
     try {
       PodcastResponse result;
-      if (nextPaging == null) {
+      if (nextPaging == null && podcasts == null) {
         statusPodcasts = StatusPodcast.LOADING;
         result = await repository.getAllPodcasts();
         podcasts = ObservableMap<String, Podcast>();
