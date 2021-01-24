@@ -2,7 +2,7 @@
 
 ## TODO
 
-- Listar [ok]
-- Load more
-- Play/Pause audio de podcast selecionado [ok]
-- Favoritar
+- [x] Listar
+- [x] Load more
+- [x] Play/Pause audio de podcast selecionado
+- [x] Favoritar
