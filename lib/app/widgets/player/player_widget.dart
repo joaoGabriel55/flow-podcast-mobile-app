@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:mobx/mobx.dart';
 
 import '../podcast_thumbnail.dart';
 
@@ -63,8 +62,8 @@ class _PlayerWidget extends ModularState<PlayerWidget, PlayerController> {
     );
   }
 
-  IconData getStatusAudio(bool value, dynamic playing) {
-    if (!value && !playing) {
+  IconData getStatusAudio(bool value) {
+    if (value) {
       return Icons.pause_circle_filled;
     }
     return Icons.play_circle_fill;
@@ -94,8 +93,7 @@ class _PlayerWidget extends ModularState<PlayerWidget, PlayerController> {
             // margin: EdgeInsets.only(left: 18, right: 18, bottom: 8),
             child: Observer(
               builder: (_) {
-                controller.isPlaying =
-                    ObservableFuture.value(_assetsAudioPlayer.isPlaying.value);
+                controller.isPlaying = true;
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,10 +153,7 @@ class _PlayerWidget extends ModularState<PlayerWidget, PlayerController> {
                                 builder: (_) {
                                   return IconButton(
                                     icon: Icon(
-                                      getStatusAudio(
-                                        controller.isPlaying.value,
-                                        _assetsAudioPlayer.isPlaying.value,
-                                      ),
+                                      getStatusAudio(controller.isPlaying),
                                       color: Colors.white,
                                       size: 38,
                                     ),
@@ -166,9 +161,8 @@ class _PlayerWidget extends ModularState<PlayerWidget, PlayerController> {
                                       if (_assetsAudioPlayer.current.value !=
                                           null) {
                                         controller.isPlaying =
-                                            ObservableFuture.value(
-                                                _assetsAudioPlayer
-                                                    .isPlaying.value);
+                                            !controller.isPlaying;
+
                                         _assetsAudioPlayer.playOrPause();
                                       }
                                     },

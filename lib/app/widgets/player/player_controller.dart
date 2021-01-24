@@ -8,7 +8,7 @@ class PlayerController = _PlayerControllerBase with _$PlayerController;
 
 abstract class _PlayerControllerBase with Store {
   @observable
-  ObservableFuture isPlaying;
+  bool isPlaying;
 
   @observable
   ObservableFuture audioDuration;
@@ -17,7 +17,6 @@ abstract class _PlayerControllerBase with Store {
   ObservableFuture audioCurrentTime;
 
   _PlayerControllerBase() {
-    this.isPlaying = ObservableFuture.value(null);
-    this.audioCurrentTime = ObservableFuture.value(null);
+    this.isPlaying = false;
   }
 }

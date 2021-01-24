@@ -22,13 +22,13 @@ mixin _$PlayerController on _PlayerControllerBase, Store {
   final _$isPlayingAtom = Atom(name: '_PlayerControllerBase.isPlaying');
 
   @override
-  ObservableFuture<dynamic> get isPlaying {
+  bool get isPlaying {
     _$isPlayingAtom.reportRead();
     return super.isPlaying;
   }
 
   @override
-  set isPlaying(ObservableFuture<dynamic> value) {
+  set isPlaying(bool value) {
     _$isPlayingAtom.reportWrite(value, super.isPlaying, () {
       super.isPlaying = value;
     });
