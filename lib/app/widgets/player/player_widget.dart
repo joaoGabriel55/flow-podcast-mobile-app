@@ -39,7 +39,6 @@ class _PlayerWidget extends ModularState<PlayerWidget, PlayerController> {
   }
 
   void _loadAudio(String url) {
-    _assetsAudioPlayer.stop();
     _assetsAudioPlayer.open(
       Audio.network(
         url,
@@ -74,8 +73,11 @@ class _PlayerWidget extends ModularState<PlayerWidget, PlayerController> {
 
   @override
   Widget build(BuildContext context) {
+    if (_currentAudio != widget.podcast.audioUrl) {
+      _currentAudio = widget.podcast.audioUrl;
+      _loadAudio(_currentAudio);
+    }
     _currentAudio = widget.podcast.audioUrl;
-    _loadAudio(_currentAudio);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -92,7 +94,6 @@ class _PlayerWidget extends ModularState<PlayerWidget, PlayerController> {
             // margin: EdgeInsets.only(left: 18, right: 18, bottom: 8),
             child: Observer(
               builder: (_) {
-                controller.isPlaying = true;
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,

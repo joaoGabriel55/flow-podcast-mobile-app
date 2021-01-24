@@ -17,6 +17,6 @@ abstract class _PlayerControllerBase with Store {
   ObservableFuture audioCurrentTime;
 
   _PlayerControllerBase() {
-    this.isPlaying = false;
+    this.isPlaying = true;
   }
 }

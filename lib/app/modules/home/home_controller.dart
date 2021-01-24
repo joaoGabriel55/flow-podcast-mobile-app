@@ -36,7 +36,7 @@ abstract class _HomeControllerBase with Store {
   StatusPodcast statusPodcasts = StatusPodcast.INITIAL;
 
   _HomeControllerBase(this.repository) {
-    showOnlyFavorites = false;
+    this.showOnlyFavorites = false;
     this.podcasts = ObservableMap<String, Podcast>();
     fetchPodcasts(null);
   }
