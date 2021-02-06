@@ -168,9 +168,6 @@ class _PlayerWidget extends ModularState<PlayerWidget, PlayerController> {
                                           ObservableFuture.value(
                                               _assetsAudioPlayer
                                                   .isPlaying.value);
-
-                                      print(controller.isPlaying.value);
-                                      print(_assetsAudioPlayer.isPlaying.value);
                                     },
                                   );
                                 },
