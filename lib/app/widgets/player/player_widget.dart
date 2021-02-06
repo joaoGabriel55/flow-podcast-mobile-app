@@ -63,10 +63,10 @@ class _PlayerWidget extends ModularState<PlayerWidget, PlayerController> {
     );
   }
 
-  IconData getStatusAudio(bool value, dynamic playing) {
-    if (!value && !playing) {
-      return Icons.pause_circle_filled;
-    }
+  IconData getStatusAudio(bool controllerPlaying, dynamic playing) {
+    if (playing) return Icons.pause_circle_filled;
+    if (controllerPlaying) return Icons.pause_circle_filled;
+
     return Icons.play_circle_fill;
   }
 
@@ -95,7 +95,7 @@ class _PlayerWidget extends ModularState<PlayerWidget, PlayerController> {
             child: Observer(
               builder: (_) {
                 controller.isPlaying =
-                    ObservableFuture.value(_assetsAudioPlayer.isPlaying.value);
+                    ObservableFuture.value(!_assetsAudioPlayer.isPlaying.value);
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,15 +162,15 @@ class _PlayerWidget extends ModularState<PlayerWidget, PlayerController> {
                                       color: Colors.white,
                                       size: 38,
                                     ),
-                                    onPressed: () {
-                                      if (_assetsAudioPlayer.current.value !=
-                                          null) {
-                                        controller.isPlaying =
-                                            ObservableFuture.value(
-                                                _assetsAudioPlayer
-                                                    .isPlaying.value);
-                                        _assetsAudioPlayer.playOrPause();
-                                      }
+                                    onPressed: () async {
+                                      await _assetsAudioPlayer.playOrPause();
+                                      controller.isPlaying =
+                                          ObservableFuture.value(
+                                              _assetsAudioPlayer
+                                                  .isPlaying.value);
+
+                                      print(controller.isPlaying.value);
+                                      print(_assetsAudioPlayer.isPlaying.value);
                                     },
                                   );
                                 },

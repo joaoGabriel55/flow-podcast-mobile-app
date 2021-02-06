@@ -149,7 +149,7 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
                           ),
                           itemBuilder: (context, index) {
                             Podcast _podcast = _podcastMap[_podcasts[index]];
-                            return GestureDetector(
+                            return InkWell(
                               child: Observer(
                                 builder: (_) {
                                   return PodcastCard(
