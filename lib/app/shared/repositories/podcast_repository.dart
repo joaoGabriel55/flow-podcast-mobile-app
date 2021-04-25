@@ -16,36 +16,53 @@ class PodcastRepository {
 
   PodcastRepository(this.dio);
 
-  Future<PodcastResponse> getAllPodcasts() async {
+  Future<PodcastResponse> getAllPodcasts({String podcastName}) async {
     try {
       var pagingParams = {
         "params": {"filter": "episodes"}
       };
-      return await _loadPodcasts(pagingParams);
+      return await _loadPodcasts(
+        pagingParams: pagingParams,
+        podcastName: podcastName,
+      );
     } catch (e) {
       throw Exception(e.toString());
     }
   }
 
-  Future<PodcastResponse> loadMorePodcasts(String nextPaging) async {
+  Future<PodcastResponse> loadMorePodcasts({
+    String nextPaging,
+    String podcastName,
+  }) async {
     try {
-      var pagingParams = {
+      Map pagingParams = {
         "params": {
           "filter": "episodes",
           "paging": {"next": nextPaging, "previous": null}
         }
       };
-      PodcastResponse result = await _loadPodcasts(pagingParams);
+      PodcastResponse result = await _loadPodcasts(
+        pagingParams: pagingParams,
+        podcastName: podcastName,
+      );
       return result;
     } catch (e) {
       throw Exception(e.toString());
     }
   }
 
-  Future<PodcastResponse> _loadPodcasts(pagingParams) async {
+  Future<PodcastResponse> _loadPodcasts({
+    String podcastName,
+    Map pagingParams,
+  }) async {
     try {
-      var response = await dio.post("episodes/list", data: pagingParams);
+      String uri = podcastName == null
+          ? "episodes/list"
+          : "episodes/list?creator_profile_name=$podcastName";
+      var response = await dio.post(uri, data: pagingParams);
       Map<String, Podcast> podcastMap = {};
+      String nextParameter = response.data["paging"]["next"];
+
       for (var json in (response.data['episodes'] as List)) {
         Podcast podcast = (PodcastBuilder(json['id'], json['title'], false)
               ..description = json['description']
@@ -54,18 +71,23 @@ class PodcastRepository {
             .build();
         podcastMap[podcast.id] = podcast;
       }
-      String nextParameter = response.data["paging"]["next"];
+
       PodcastResponse result = PodcastResponse(nextParameter, podcastMap);
+
       return result;
     } catch (e) {
       throw Exception(e.toString());
     }
   }
 
-  Future<Podcast> getPodcast(String id) async {
+  Future<Podcast> getPodcast(String id, {String podcastName}) async {
     try {
-      var response = await dio.get("episodes/view/$id");
+      String uri = podcastName == null
+          ? "episodes/view/$id"
+          : "episodes/view/$id?creator_profile_name=$podcastName";
+      var response = await dio.get(uri);
       var episode = response.data['episode'];
+
       Podcast podcast = (PodcastBuilder(episode['id'], episode['title'], false)
             ..description = episode['description']
             ..thumbnailUrl = episode['artwork']
