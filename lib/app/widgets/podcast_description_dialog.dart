@@ -41,9 +41,7 @@ class _PodcastDescriptionDialogState extends State<PodcastDescriptionDialog> {
             shape: BoxShape.rectangle,
             color: Colors.black,
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: Theme.of(context).accentColor
-            ),
+            border: Border.all(color: Theme.of(context).accentColor),
             boxShadow: [
               BoxShadow(
                   color: Colors.black, offset: Offset(0, 10), blurRadius: 10),
@@ -79,7 +77,10 @@ class _PodcastDescriptionDialogState extends State<PodcastDescriptionDialog> {
         Container(
           padding: EdgeInsets.only(left: 8),
           child: widget.thumbnail != null
-              ? PodcastThumbnail(url: this.widget.thumbnail)
+              ? PodcastThumbnail(
+                  url: this.widget.thumbnail,
+                  width: 80,
+                )
               : Container(
                   width: 80,
                   child: Icon(
