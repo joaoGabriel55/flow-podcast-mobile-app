@@ -150,8 +150,9 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
                           return Center(
                             child: CircularProgressIndicator(
                               backgroundColor: Colors.black,
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.amber),
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                getCreatorColor(),
+                              ),
                             ),
                           );
                           break;
