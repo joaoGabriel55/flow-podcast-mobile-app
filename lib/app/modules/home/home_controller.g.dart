@@ -34,6 +34,22 @@ mixin _$HomeController on _HomeControllerBase, Store {
     });
   }
 
+  final _$creatorSelectedAtom =
+      Atom(name: '_HomeControllerBase.creatorSelected');
+
+  @override
+  String get creatorSelected {
+    _$creatorSelectedAtom.reportRead();
+    return super.creatorSelected;
+  }
+
+  @override
+  set creatorSelected(String value) {
+    _$creatorSelectedAtom.reportWrite(value, super.creatorSelected, () {
+      super.creatorSelected = value;
+    });
+  }
+
   final _$loadMoreNextParameterAtom =
       Atom(name: '_HomeControllerBase.loadMoreNextParameter');
 
@@ -191,6 +207,7 @@ mixin _$HomeController on _HomeControllerBase, Store {
   String toString() {
     return '''
 podcasts: ${podcasts},
+creatorSelected: ${creatorSelected},
 loadMoreNextParameter: ${loadMoreNextParameter},
 showOnlyFavorites: ${showOnlyFavorites},
 favoritePodcastsIds: ${favoritePodcastsIds},

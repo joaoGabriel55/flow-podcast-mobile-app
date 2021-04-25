@@ -18,6 +18,9 @@ abstract class _HomeControllerBase with Store {
   ObservableMap<String, Podcast> podcasts;
 
   @observable
+  String creatorSelected;
+
+  @observable
   String loadMoreNextParameter;
 
   @observable

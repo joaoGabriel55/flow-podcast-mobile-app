@@ -7,6 +7,7 @@ class PodcastCard extends StatefulWidget {
   final String title;
   final bool isFavorite;
   final Function addFavorite;
+  final Color favoriteIconColor;
 
   const PodcastCard({
     Key key,
@@ -14,6 +15,7 @@ class PodcastCard extends StatefulWidget {
     this.thumbnail,
     this.addFavorite,
     this.isFavorite,
+    this.favoriteIconColor,
   }) : super(key: key);
   @override
   _PodcastCard createState() => new _PodcastCard();
@@ -78,7 +80,7 @@ class _PodcastCard extends State<PodcastCard> {
                   this.widget.isFavorite
                       ? Icons.favorite
                       : Icons.favorite_border,
-                  color: Theme.of(context).accentColor,
+                  color: this.widget.favoriteIconColor,
                   size: 28,
                 ),
                 onPressed: this.widget.addFavorite,
