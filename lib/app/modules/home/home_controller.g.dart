@@ -166,9 +166,9 @@ mixin _$HomeController on _HomeControllerBase, Store {
       AsyncAction('_HomeControllerBase.addOrRemoveFavorite');
 
   @override
-  Future addOrRemoveFavorite(String id) {
+  Future addOrRemoveFavorite(String id, String creatorName) {
     return _$addOrRemoveFavoriteAsyncAction
-        .run(() => super.addOrRemoveFavorite(id));
+        .run(() => super.addOrRemoveFavorite(id, creatorName));
   }
 
   final _$getFavoritesPodcastsIdsAsyncAction =

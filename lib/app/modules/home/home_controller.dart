@@ -43,6 +43,10 @@ abstract class _HomeControllerBase with Store {
     fetchPodcasts();
   }
 
+  String _getCreatorName() {
+    return this.creatorSelected == null ? 'flowpodcast' : this.creatorSelected;
+  }
+
   @action
   selectPodcast(Podcast podcast) => podcastSelected = podcast;
 
@@ -60,14 +64,15 @@ abstract class _HomeControllerBase with Store {
           podcastName: podcastName,
         );
       }
-      loadMoreNextParameter = result.next;
-      podcasts.addAll(result.podcastMap.asObservable());
 
+      loadMoreNextParameter = result.next;
+      if (result.podcastMap.isEmpty) return;
+
+      podcasts.addAll(result.podcastMap.asObservable());
       statusPodcasts = StatusPodcast.SUCCESS;
       favoritePodcastsIds = await getFavoritesPodcastsIds();
     } catch (e) {
       statusPodcasts = StatusPodcast.ERROR;
-      //statusPodcasts.setMensagem = "Ex mensagem de erro";
     }
   }
 
@@ -84,13 +89,19 @@ abstract class _HomeControllerBase with Store {
   }
 
   @action
-  addOrRemoveFavorite(String id) async {
+  addOrRemoveFavorite(String id, String creatorName) async {
+    String creatorName = _getCreatorName();
     List<String> favorites = await getFavoritesPodcastsIds();
     if (favorites == null) {
-      _storage.put('favorites', List());
+      _storage.put(creatorName, []);
       favorites = await getFavoritesPodcastsIds();
     }
-    Podcast podcastFavorited = await repository.getPodcast(id).asObservable();
+    Podcast podcastFavorited = await repository
+        .getPodcast(
+          id,
+          podcastName: this.creatorSelected,
+        )
+        .asObservable();
     if (!favorites.contains(id)) {
       favorites.add(id);
       podcastFavorited.isFavorite = true;
@@ -103,19 +114,21 @@ abstract class _HomeControllerBase with Store {
       podcasts[podcastFavorited.id] = podcastFavorited;
     }
 
-    _storage.put('favorites', favorites);
+    _storage.put(creatorName, favorites);
     favoritePodcastsIds = await getFavoritesPodcastsIds();
   }
 
   @action
   getFavoritesPodcastsIds() async {
     try {
-      List<String> favorites = await _storage.get('favorites');
+      String creatorName = _getCreatorName();
+      List<String> favorites = await _storage.get(creatorName);
       if (favorites == null) {
-        _storage.put('favorites', List());
-        favorites = await _storage.get('favorites');
+        _storage.put(creatorName, []);
+        favorites = await _storage.get(creatorName);
       }
-      return favorites.asObservable();
+      favoritePodcastsIds = favorites.asObservable();
+      return favoritePodcastsIds;
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -131,7 +144,10 @@ abstract class _HomeControllerBase with Store {
           ObservableMap<String, Podcast>();
 
       for (String id in favorites) {
-        Podcast podcast = await repository.getPodcast(id);
+        Podcast podcast = await repository.getPodcast(
+          id,
+          podcastName: this.creatorSelected,
+        );
         favoritePodcasts[podcast.id] = podcast;
       }
       podcasts = favoritePodcasts;

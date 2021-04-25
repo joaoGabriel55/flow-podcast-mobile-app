@@ -29,6 +29,24 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
       controller.fetchPodcasts(podcastName: creatorSelected);
   }
 
+  void _loadMorePodcasts(ScrollNotification scrollInfo) {
+    var metrics = scrollInfo.metrics;
+    var pixels = metrics.pixels;
+    var maxScrollExtent = metrics.maxScrollExtent;
+    var nextParameterIsNotEmpty = controller.loadMoreNextParameter != null;
+    var isAbleToFetchPodcasts =
+        !controller.showOnlyFavorites && nextParameterIsNotEmpty;
+
+    if (pixels == maxScrollExtent) {
+      if (isAbleToFetchPodcasts) {
+        controller.fetchPodcasts(
+          nextPaging: controller.loadMoreNextParameter,
+          podcastName: controller.creatorSelected,
+        );
+      }
+    }
+  }
+
   Color getCreatorColor() {
     String creatorSelected = controller.creatorSelected;
 
@@ -101,7 +119,6 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
             return PodcastCreatorsNavDrawer(
               onClickCreator: (creatorNameParam) {
                 controller.creatorSelected = creatorNameParam;
-                print(creatorNameParam);
                 _loadPodcasts();
                 Navigator.of(context).pop();
               },
@@ -183,17 +200,8 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
                             children: [
                               NotificationListener<ScrollNotification>(
                                 // ignore: missing_return
-                                onNotification:
-                                    (ScrollNotification scrollInfo) {
-                                  if (scrollInfo.metrics.pixels ==
-                                      scrollInfo.metrics.maxScrollExtent) {
-                                    if (!controller.showOnlyFavorites) {
-                                      controller.fetchPodcasts(
-                                        nextPaging:
-                                            controller.loadMoreNextParameter,
-                                      );
-                                    }
-                                  }
+                                onNotification: (scrollInfo) {
+                                  _loadMorePodcasts(scrollInfo);
                                 },
                                 child: ListView.builder(
                                   itemCount: _podcasts.length,
@@ -217,7 +225,9 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
                                                 favorites.contains(_podcast.id),
                                             addFavorite: () {
                                               controller.addOrRemoveFavorite(
-                                                  _podcast.id);
+                                                _podcast.id,
+                                                controller.creatorSelected,
+                                              );
                                               _podcast.isFavorite =
                                                   !_podcast.isFavorite;
                                             },
@@ -256,12 +266,16 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
                     builder: (_) {
                       if (controller.podcastSelected != null) {
                         Podcast podcast = controller.podcastSelected;
+                        String creatorSelected = controller.creatorSelected;
                         List<String> favorites = controller.favoritePodcastsIds;
                         return PlayerWidget(
                           podcast: podcast,
                           isFavorite: favorites.contains(podcast.id),
                           addFavorite: () {
-                            controller.addOrRemoveFavorite(podcast.id);
+                            controller.addOrRemoveFavorite(
+                              podcast.id,
+                              creatorSelected,
+                            );
                           },
                           closePlayer: () {
                             controller.selectPodcast(null);
