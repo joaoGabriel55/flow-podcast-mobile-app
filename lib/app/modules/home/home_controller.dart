@@ -37,22 +37,25 @@ abstract class _HomeControllerBase with Store {
 
   _HomeControllerBase(this.repository) {
     showOnlyFavorites = false;
-    fetchPodcasts(null);
+    fetchPodcasts();
   }
 
   @action
   selectPodcast(Podcast podcast) => podcastSelected = podcast;
 
   @action
-  fetchPodcasts(String nextPaging) async {
+  fetchPodcasts({String podcastName, String nextPaging}) async {
     try {
       PodcastResponse result;
       if (nextPaging == null) {
         statusPodcasts = StatusPodcast.LOADING;
-        result = await repository.getAllPodcasts();
+        result = await repository.getAllPodcasts(podcastName: podcastName);
         podcasts = ObservableMap<String, Podcast>();
       } else {
-        result = await repository.loadMorePodcasts(nextPaging);
+        result = await repository.loadMorePodcasts(
+          nextPaging: nextPaging,
+          podcastName: podcastName,
+        );
       }
       loadMoreNextParameter = result.next;
       podcasts.addAll(result.podcastMap.asObservable());

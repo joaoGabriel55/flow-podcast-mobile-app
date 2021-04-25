@@ -133,9 +133,9 @@ mixin _$HomeController on _HomeControllerBase, Store {
       AsyncAction('_HomeControllerBase.fetchPodcasts');
 
   @override
-  Future fetchPodcasts(String nextPaging) {
-    return _$fetchPodcastsAsyncAction
-        .run(() => super.fetchPodcasts(nextPaging));
+  Future fetchPodcasts({String podcastName, String nextPaging}) {
+    return _$fetchPodcastsAsyncAction.run(() =>
+        super.fetchPodcasts(podcastName: podcastName, nextPaging: nextPaging));
   }
 
   final _$fetchPodcastAsyncAction =
