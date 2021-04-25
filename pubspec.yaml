@@ -42,6 +42,7 @@ dependencies:
   mobx: ^1.2.1+4
   flutter_modular: ^2.0.1
   assets_audio_player: ^2.0.13+1
+  cached_network_image: ^2.5.1
   flutter:
     sdk: flutter
 

@@ -1,3 +1,5 @@
+import 'package:flowpdc_app/app/widgets/cached_image_widget.dart';
+import 'package:flowpdc_app/app/widgets/podcast_thumbnail.dart';
 import 'package:flutter/material.dart';
 
 class PodcastCreatorLink extends StatelessWidget {
@@ -25,29 +27,9 @@ class PodcastCreatorLink extends StatelessWidget {
       child: InkWell(
         child: Row(
           children: [
-            Container(
+            PodcastThumbnail(
               width: 80,
-              child: Image.network(
-                this.creatorLogoPath,
-                width: 80,
-                fit: BoxFit.fill,
-                loadingBuilder: (
-                  BuildContext context,
-                  Widget child,
-                  ImageChunkEvent loadingProgress,
-                ) {
-                  if (loadingProgress == null) return child;
-                  return Container(
-                    margin: EdgeInsets.all(22),
-                    child: CircularProgressIndicator(
-                      value: loadingProgress.expectedTotalBytes != null
-                          ? loadingProgress.cumulativeBytesLoaded /
-                              loadingProgress.expectedTotalBytes
-                          : null,
-                    ),
-                  );
-                },
-              ),
+              url: this.creatorLogoPath,
             ),
             Container(
               margin: EdgeInsets.only(left: 18),

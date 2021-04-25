@@ -41,6 +41,7 @@ class _PodcastCard extends State<PodcastCard> {
           children: [
             widget.thumbnail != null
                 ? PodcastThumbnail(
+                    width: 80,
                     url: this.widget.thumbnail,
                     circularProgressIndicatorColor:
                         this.widget.favoriteIconColor,
