@@ -40,12 +40,16 @@ class _PodcastCard extends State<PodcastCard> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             widget.thumbnail != null
-                ? PodcastThumbnail(url: this.widget.thumbnail)
+                ? PodcastThumbnail(
+                    url: this.widget.thumbnail,
+                    circularProgressIndicatorColor:
+                        this.widget.favoriteIconColor,
+                  )
                 : Container(
                     width: 80,
                     child: Icon(
                       Icons.audiotrack,
-                      color: Theme.of(context).accentColor,
+                      color: this.widget.favoriteIconColor,
                       size: 48,
                     ),
                   ),
